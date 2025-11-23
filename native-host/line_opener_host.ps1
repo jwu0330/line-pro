@@ -22,7 +22,14 @@ $messageJson = [System.Text.Encoding]::UTF8.GetString($messageBytes)
 $message = $messageJson | ConvertFrom-Json
 
 # 處理訊息
-if ($message.action -eq 'openLINE') {
+if ($message.action -eq 'ping') {
+    # Ping 命令 - 用於檢測 Native Host 是否安裝
+    $response = @{
+        success = $true
+        message = "Native Host is running"
+        version = "2.0.0"
+    } | ConvertTo-Json -Compress
+} elseif ($message.action -eq 'openLINE') {
     # 執行 LINE 開啟腳本
     $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
     $autoClickScript = Join-Path $scriptDir "auto_click_line.ps1"
@@ -39,7 +46,7 @@ if ($message.action -eq 'openLINE') {
     # 回應錯誤
     $response = @{
         success = $false
-        error = "Unknown action"
+        error = "Unknown action: $($message.action)"
     } | ConvertTo-Json -Compress
 }
 
