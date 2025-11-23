@@ -87,8 +87,13 @@ function showInstallGuide() {
     // 安裝按鈕 - 開啟一鍵安裝頁面並傳遞 Extension ID
     document.getElementById('downloadBtn').addEventListener('click', (e) => {
         e.preventDefault();
+        
+        // 本地測試：使用 file:// 協定
+        // 生產環境：使用 GitHub Pages
+        const installUrl = `https://jwu0330.github.io/line-pro/install.html?id=${extId}`;
+        
         chrome.tabs.create({
-            url: `https://jwu0330.github.io/line-pro/install.html?id=${extId}`
+            url: installUrl
         });
     });
     
