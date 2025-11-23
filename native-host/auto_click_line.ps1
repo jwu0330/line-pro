@@ -329,7 +329,7 @@ if ($success) {
     Write-Host ""
     Write-Host "LINE is opening, closing original Edge window..." -ForegroundColor Cyan
     
-    # 立即關閉原本的 Edge 視窗（不等待）
+    # 立即關閉原本的 Edge 視窗（使用多種方法確保關閉）
     try {
         Add-Type @"
         using System;
@@ -346,8 +346,14 @@ if ($success) {
             public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
             [DllImport("user32.dll")]
             public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+            [DllImport("user32.dll")]
+            public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+            [DllImport("user32.dll")]
+            public static extern bool SetForegroundWindow(IntPtr hWnd);
             public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
             public const uint WM_CLOSE = 0x0010;
+            public const uint WM_SYSCOMMAND = 0x0112;
+            public const uint SC_CLOSE = 0xF060;
         }
 "@
         
@@ -375,9 +381,13 @@ if ($success) {
         
         [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)
         
-        # 立即關閉所有非 LINE 的 Edge 視窗
+        # 使用多種方法強制關閉所有非 LINE 的 Edge 視窗
         foreach ($window in $edgeWindows) {
+            # 方法 1: 發送 WM_CLOSE
             [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
+            
+            # 方法 2: 發送 WM_SYSCOMMAND SC_CLOSE（更強制）
+            [WindowHelper]::SendMessage($window.Handle, [WindowHelper]::WM_SYSCOMMAND, [IntPtr]::new([int][WindowHelper]::SC_CLOSE), [IntPtr]::Zero) | Out-Null
         }
         
         Write-Host "Original Edge windows closed" -ForegroundColor Green
