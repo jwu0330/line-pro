@@ -158,7 +158,6 @@ function generateInstallCommand(extensionId) {
     cmd += '    } catch {}\n';
     cmd += '}\n';
     cmd += 'if ($success) {\n';
-    cmd += '    Start-Sleep -Seconds 3\n';
     cmd += '    try {\n';
     cmd += '        $originalEdgeHandle = $edge.MainWindowHandle\n';
     cmd += '        Add-Type @"\n';

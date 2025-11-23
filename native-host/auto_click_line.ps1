@@ -327,20 +327,10 @@ if ($success) {
     Write-Host "  SUCCESS!" -ForegroundColor Green
     Write-Host "========================================" -ForegroundColor Green
     Write-Host ""
-    Write-Host "LINE should now be opening..." -ForegroundColor Cyan
-    Write-Host ""
+    Write-Host "LINE is opening, closing original Edge window..." -ForegroundColor Cyan
     
-    # 等待 LINE 視窗完全開啟
-    Start-Sleep -Seconds 3
-    
-    # 關閉原本的 Edge 視窗（不是 LINE 視窗）
-    Write-Host "Closing original Edge window..." -ForegroundColor Gray
-    
+    # 立即關閉原本的 Edge 視窗（不等待）
     try {
-        # 取得原本 Edge 視窗的控制代碼
-        $originalEdgeHandle = $edge.MainWindowHandle
-        
-        # 尋找所有 Edge 視窗
         Add-Type @"
         using System;
         using System.Runtime.InteropServices;
@@ -361,7 +351,7 @@ if ($success) {
         }
 "@
         
-        # 找到原本的 Edge 視窗（不是 LINE 視窗）
+        # 找到所有 Edge 視窗（排除 LINE）
         $edgeWindows = New-Object System.Collections.ArrayList
         $callback = {
             param($hwnd, $lParam)
@@ -369,7 +359,6 @@ if ($success) {
                 $winProcessId = 0
                 [WindowHelper]::GetWindowThreadProcessId($hwnd, [ref]$winProcessId) | Out-Null
                 
-                # 檢查是否是 Edge 進程
                 if ($winProcessId -eq $edge.Id) {
                     $title = New-Object System.Text.StringBuilder 256
                     [WindowHelper]::GetWindowText($hwnd, $title, 256) | Out-Null
@@ -386,15 +375,14 @@ if ($success) {
         
         [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)
         
-        # 關閉所有非 LINE 的 Edge 視窗
+        # 立即關閉所有非 LINE 的 Edge 視窗
         foreach ($window in $edgeWindows) {
-            Write-Host "  Closing: $($window.Title)" -ForegroundColor Gray
             [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
         }
         
-        Write-Host "  Original Edge windows closed" -ForegroundColor Green
+        Write-Host "Original Edge windows closed" -ForegroundColor Green
     } catch {
-        Write-Host "  Error closing windows: $_" -ForegroundColor Yellow
+        Write-Host "Error: $_" -ForegroundColor Yellow
     }
     
     exit 0
