@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            width: 280px;
+            padding: 0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding: 15px;
+            text-align: center;
+        }
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00B900;
+            margin-bottom: 10px;
+        }
+        .message {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #00B900;
+            font-weight: bold;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00B900;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🚀 正在開啟 LINE...</div>
+        <div class="message">
+            <strong>⚠️ 第一次使用請設定：</strong><br>
+            在彈出的對話框中<br>
+            點擊「<span class="highlight">開啟 open_line_in_edge</span>」<br>
+            <br>
+            <small style="color: #999;">設定後下次就會自動開啟，不再詢問</small>
+        </div>
+        <div class="loading"></div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
