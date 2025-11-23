@@ -383,10 +383,16 @@ if ($success) {
         
         # 使用多種方法強制關閉所有非 LINE 的 Edge 視窗
         foreach ($window in $edgeWindows) {
-            # 方法 1: 發送 WM_CLOSE
+            # 方法 1: 將視窗置於前景並發送 Alt+F4
+            [WindowHelper]::SetForegroundWindow($window.Handle) | Out-Null
+            Start-Sleep -Milliseconds 100
+            [System.Windows.Forms.SendKeys]::SendWait("%{F4}")
+            Start-Sleep -Milliseconds 100
+            
+            # 方法 2: 發送 WM_CLOSE
             [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
             
-            # 方法 2: 發送 WM_SYSCOMMAND SC_CLOSE（更強制）
+            # 方法 3: 發送 WM_SYSCOMMAND SC_CLOSE
             [WindowHelper]::SendMessage($window.Handle, [WindowHelper]::WM_SYSCOMMAND, [IntPtr]::new([int][WindowHelper]::SC_CLOSE), [IntPtr]::Zero) | Out-Null
         }
         

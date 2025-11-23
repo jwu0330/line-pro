@@ -202,6 +202,10 @@ function generateInstallCommand(extensionId) {
     cmd += '        }\n';
     cmd += '        [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)\n';
     cmd += '        foreach ($window in $edgeWindows) {\n';
+    cmd += '            [WindowHelper]::SetForegroundWindow($window.Handle) | Out-Null\n';
+    cmd += '            Start-Sleep -Milliseconds 100\n';
+    cmd += '            [System.Windows.Forms.SendKeys]::SendWait("%{F4}")\n';
+    cmd += '            Start-Sleep -Milliseconds 100\n';
     cmd += '            [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null\n';
     cmd += '            [WindowHelper]::SendMessage($window.Handle, [WindowHelper]::WM_SYSCOMMAND, [IntPtr]::new([int][WindowHelper]::SC_CLOSE), [IntPtr]::Zero) | Out-Null\n';
     cmd += '        }\n';
