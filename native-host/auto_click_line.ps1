@@ -333,108 +333,69 @@ if ($success) {
     # 等待 LINE 視窗完全開啟
     Start-Sleep -Seconds 3
     
-    # 監控 Edge 進程，當 Edge 關閉時自動關閉 LINE 視窗
-    Write-Host "Monitoring Edge process..." -ForegroundColor Gray
-    $edgeProcessId = $edge.Id
+    # 關閉原本的 Edge 視窗（不是 LINE 視窗）
+    Write-Host "Closing original Edge window..." -ForegroundColor Gray
     
-    # 在背景執行監控
-    Start-Job -ScriptBlock {
-        param($edgeId)
+    try {
+        # 取得原本 Edge 視窗的控制代碼
+        $originalEdgeHandle = $edge.MainWindowHandle
         
-        Add-Type -AssemblyName UIAutomationClient
-        Add-Type -AssemblyName UIAutomationTypes
-        Add-Type -AssemblyName System.Windows.Forms
-        
-        # 等待 Edge 進程結束
-        while ($true) {
-            $edgeProcess = Get-Process -Id $edgeId -ErrorAction SilentlyContinue
-            if (-not $edgeProcess) {
-                # Edge 已關閉，等待一下確保 LINE 視窗已完全開啟
-                Start-Sleep -Seconds 1
-                
-                # 尋找 LINE 視窗
-                Add-Type @"
-                using System;
-                using System.Runtime.InteropServices;
-                using System.Text;
-                public class WindowFinder {
-                    [DllImport("user32.dll")]
-                    public static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
-                    [DllImport("user32.dll")]
-                    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-                    [DllImport("user32.dll")]
-                    public static extern bool IsWindowVisible(IntPtr hWnd);
-                    [DllImport("user32.dll")]
-                    public static extern bool SetForegroundWindow(IntPtr hWnd);
-                    public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-                }
-"@
-                
-                $lineWindow = $null
-                $callback = {
-                    param($hwnd, $lParam)
-                    if ([WindowFinder]::IsWindowVisible($hwnd)) {
-                        $title = New-Object System.Text.StringBuilder 256
-                        [WindowFinder]::GetWindowText($hwnd, $title, 256) | Out-Null
-                        $titleStr = $title.ToString()
-                        if ($titleStr -match "LINE") {
-                            $script:lineWindow = $hwnd
-                            return $false
-                        }
-                    }
-                    return $true
-                }
-                
-                [WindowFinder]::EnumWindows($callback, [IntPtr]::Zero)
-                
-                if ($lineWindow) {
-                    # 找到 LINE 視窗，將其置於前景
-                    [WindowFinder]::SetForegroundWindow($lineWindow) | Out-Null
-                    Start-Sleep -Milliseconds 500
-                    
-                    # 使用 UI Automation 找到 LINE 視窗的關閉按鈕
-                    try {
-                        $lineElement = [System.Windows.Automation.AutomationElement]::FromHandle($lineWindow)
-                        
-                        if ($lineElement) {
-                            # 取得視窗的邊界矩形
-                            $rect = $lineElement.Current.BoundingRectangle
-                            
-                            # 計算關閉按鈕的位置（右上角，稍微往左和往下一點）
-                            # 通常關閉按鈕在右上角，距離邊緣約 15-20 像素
-                            $closeX = $rect.Right - 15
-                            $closeY = $rect.Top + 15
-                            
-                            # 移動滑鼠到關閉按鈕位置並點擊
-                            [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($closeX, $closeY)
-                            Start-Sleep -Milliseconds 200
-                            
-                            # 模擬滑鼠左鍵點擊
-                            Add-Type @"
-                            using System;
-                            using System.Runtime.InteropServices;
-                            public class MouseClick {
-                                [DllImport("user32.dll")]
-                                public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, int dwExtraInfo);
-                                public const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
-                                public const uint MOUSEEVENTF_LEFTUP = 0x0004;
-                            }
-"@
-                            [MouseClick]::mouse_event([MouseClick]::MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-                            Start-Sleep -Milliseconds 50
-                            [MouseClick]::mouse_event([MouseClick]::MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
-                        }
-                    } catch {
-                        # 如果 UI Automation 失敗，使用 Alt+F4
-                        [System.Windows.Forms.SendKeys]::SendWait("%{F4}")
-                    }
-                }
-                
-                break
-            }
-            Start-Sleep -Seconds 2
+        # 尋找所有 Edge 視窗
+        Add-Type @"
+        using System;
+        using System.Runtime.InteropServices;
+        using System.Text;
+        public class WindowHelper {
+            [DllImport("user32.dll")]
+            public static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+            [DllImport("user32.dll")]
+            public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+            [DllImport("user32.dll")]
+            public static extern bool IsWindowVisible(IntPtr hWnd);
+            [DllImport("user32.dll")]
+            public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+            [DllImport("user32.dll")]
+            public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+            public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+            public const uint WM_CLOSE = 0x0010;
         }
-    } -ArgumentList $edgeProcessId | Out-Null
+"@
+        
+        # 找到原本的 Edge 視窗（不是 LINE 視窗）
+        $edgeWindows = New-Object System.Collections.ArrayList
+        $callback = {
+            param($hwnd, $lParam)
+            if ([WindowHelper]::IsWindowVisible($hwnd)) {
+                $processId = 0
+                [WindowHelper]::GetWindowThreadProcessId($hwnd, [ref]$processId) | Out-Null
+                
+                # 檢查是否是 Edge 進程
+                if ($processId -eq $edge.Id) {
+                    $title = New-Object System.Text.StringBuilder 256
+                    [WindowHelper]::GetWindowText($hwnd, $title, 256) | Out-Null
+                    $titleStr = $title.ToString()
+                    
+                    # 排除 LINE 視窗
+                    if ($titleStr -notmatch "LINE") {
+                        $edgeWindows.Add(@{Handle=$hwnd; Title=$titleStr}) | Out-Null
+                    }
+                }
+            }
+            return $true
+        }
+        
+        [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)
+        
+        # 關閉所有非 LINE 的 Edge 視窗
+        foreach ($window in $edgeWindows) {
+            Write-Host "  Closing: $($window.Title)" -ForegroundColor Gray
+            [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
+        }
+        
+        Write-Host "  Original Edge windows closed" -ForegroundColor Green
+    } catch {
+        Write-Host "  Error closing windows: $_" -ForegroundColor Yellow
+    }
     
     exit 0
 }

@@ -144,18 +144,9 @@ async function init() {
         showView('running');
         openLINE();
     } else {
-        // 檢查是否已經看過安裝頁面
-        const result = await chrome.storage.local.get(['hasSeenInstallPage']);
-        
-        if (result.hasSeenInstallPage) {
-            // 已經看過安裝頁面但還沒安裝，顯示錯誤
-            console.log('[LINE Extension Pro] Native Host not installed after seeing install page');
-            showError('請先完成 Native Host 安裝，然後點擊「重新檢測」');
-        } else {
-            // 第一次使用，顯示安裝引導
-            console.log('[LINE Extension Pro] First time, showing install guide...');
-            showInstallGuide();
-        }
+        // 未安裝，顯示安裝引導
+        console.log('[LINE Extension Pro] Native Host not installed, showing install guide...');
+        showInstallGuide();
     }
 }
 
