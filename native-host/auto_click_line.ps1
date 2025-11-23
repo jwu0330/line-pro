@@ -329,6 +329,67 @@ if ($success) {
     Write-Host ""
     Write-Host "LINE should now be opening..." -ForegroundColor Cyan
     Write-Host ""
+    
+    # 等待 LINE 視窗出現
+    Start-Sleep -Seconds 2
+    
+    # 監控 Edge 進程，當 Edge 關閉時自動關閉 LINE 視窗
+    Write-Host "Monitoring Edge process..." -ForegroundColor Gray
+    $edgeProcessId = $edge.Id
+    
+    # 在背景執行監控
+    Start-Job -ScriptBlock {
+        param($edgeId)
+        
+        # 等待 Edge 進程結束
+        while ($true) {
+            $edgeProcess = Get-Process -Id $edgeId -ErrorAction SilentlyContinue
+            if (-not $edgeProcess) {
+                # Edge 已關閉，尋找並關閉 LINE 視窗
+                Start-Sleep -Seconds 1
+                
+                # 尋找 LINE 視窗（標題包含 "LINE"）
+                Add-Type @"
+                using System;
+                using System.Runtime.InteropServices;
+                using System.Text;
+                public class WindowHelper {
+                    [DllImport("user32.dll")]
+                    public static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+                    [DllImport("user32.dll")]
+                    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+                    [DllImport("user32.dll")]
+                    public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+                    public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+                    public const uint WM_CLOSE = 0x0010;
+                }
+"@
+                
+                $lineWindows = New-Object System.Collections.ArrayList
+                $callback = {
+                    param($hwnd, $lParam)
+                    $title = New-Object System.Text.StringBuilder 256
+                    [WindowHelper]::GetWindowText($hwnd, $title, 256) | Out-Null
+                    $titleStr = $title.ToString()
+                    if ($titleStr -match "LINE") {
+                        $lineWindows.Add($hwnd) | Out-Null
+                    }
+                    return $true
+                }
+                
+                [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)
+                
+                # 關閉所有 LINE 視窗
+                foreach ($hwnd in $lineWindows) {
+                    [WindowHelper]::PostMessage($hwnd, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
+                }
+                
+                break
+            }
+            Start-Sleep -Seconds 2
+        }
+    } -ArgumentList $edgeProcessId | Out-Null
+    
     exit 0
 }
 
