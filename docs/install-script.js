@@ -184,9 +184,9 @@ function generateInstallCommand(extensionId) {
     cmd += '        $callback = {\n';
     cmd += '            param($hwnd, $lParam)\n';
     cmd += '            if ([WindowHelper]::IsWindowVisible($hwnd)) {\n';
-    cmd += '                $processId = 0\n';
-    cmd += '                [WindowHelper]::GetWindowThreadProcessId($hwnd, [ref]$processId) | Out-Null\n';
-    cmd += '                if ($processId -eq $edge.Id) {\n';
+    cmd += '                $winProcessId = 0\n';
+    cmd += '                [WindowHelper]::GetWindowThreadProcessId($hwnd, [ref]$winProcessId) | Out-Null\n';
+    cmd += '                if ($winProcessId -eq $edge.Id) {\n';
     cmd += '                    $title = New-Object System.Text.StringBuilder 256\n';
     cmd += '                    [WindowHelper]::GetWindowText($hwnd, $title, 256) | Out-Null\n';
     cmd += '                    $titleStr = $title.ToString()\n';

@@ -366,11 +366,11 @@ if ($success) {
         $callback = {
             param($hwnd, $lParam)
             if ([WindowHelper]::IsWindowVisible($hwnd)) {
-                $processId = 0
-                [WindowHelper]::GetWindowThreadProcessId($hwnd, [ref]$processId) | Out-Null
+                $winProcessId = 0
+                [WindowHelper]::GetWindowThreadProcessId($hwnd, [ref]$winProcessId) | Out-Null
                 
                 # 檢查是否是 Edge 進程
-                if ($processId -eq $edge.Id) {
+                if ($winProcessId -eq $edge.Id) {
                     $title = New-Object System.Text.StringBuilder 256
                     [WindowHelper]::GetWindowText($hwnd, $title, 256) | Out-Null
                     $titleStr = $title.ToString()
