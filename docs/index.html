@@ -199,49 +199,29 @@
                 </a>
             </div>
 
-            <h2>📋 安裝步驟</h2>
+            <h2>📋 超簡單 3 步驟</h2>
             <div class="steps">
                 <div class="step">
                     <span class="step-number">1</span>
-                    <h3>下載並解壓縮</h3>
-                    <p>下載 line-pro-installer.zip 並解壓到任意位置</p>
+                    <h3>下載並載入擴充程式</h3>
+                    <p>
+                        下載 → 解壓縮 → 在 Chrome 載入（<code>chrome://extensions/</code>）
+                    </p>
                 </div>
 
                 <div class="step">
                     <span class="step-number">2</span>
-                    <h3>載入 Chrome 擴充程式</h3>
+                    <h3>點擊圖示，複製指令</h3>
                     <p>
-                        1. 開啟 Chrome 並前往 <code>chrome://extensions/</code><br>
-                        2. 開啟右上角的「開發人員模式」<br>
-                        3. 點擊「載入未封裝項目」<br>
-                        4. 選擇解壓後的資料夾<br>
-                        5. <strong>複製擴充程式 ID</strong>（在擴充程式名稱下方）
+                        點擊擴充圖示 → 點擊「開始安裝」→ 複製 PowerShell 指令
                     </p>
                 </div>
 
                 <div class="step">
                     <span class="step-number">3</span>
-                    <h3>執行安裝程式</h3>
+                    <h3>貼到 PowerShell 執行</h3>
                     <p>
-                        1. 雙擊執行 <code>install-pro.bat</code><br>
-                        2. 當提示時，貼上剛才複製的 Extension ID<br>
-                        3. 等待安裝完成
-                    </p>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">4</span>
-                    <h3>重新載入擴充程式</h3>
-                    <p>
-                        回到 <code>chrome://extensions/</code>，點擊擴充程式的「重新載入」按鈕
-                    </p>
-                </div>
-
-                <div class="step">
-                    <span class="step-number">5</span>
-                    <h3>開始使用</h3>
-                    <p>
-                        點擊 Chrome 工具列上的 LINE 圖示，LINE 會自動在 Edge 中開啟！
+                        開啟 PowerShell → 貼上 → 按 Enter → 完成！
                     </p>
                 </div>
             </div>
@@ -256,41 +236,32 @@
                 </ul>
             </div>
 
-            <h2>🎯 使用方式</h2>
+            <h2>🎯 之後使用</h2>
             <div class="step">
-                <h3>第一次使用</h3>
+                <h3>只要點一下圖示</h3>
                 <p>
-                    點擊圖示 → 看到引導頁面 → 下載安裝 → 重新檢測 → 自動開啟 LINE
-                </p>
-            </div>
-            <div class="step">
-                <h3>之後使用</h3>
-                <p>
-                    點擊圖示 → 直接開啟 LINE（約 3-5 秒）
+                    點擊 Chrome 工具列上的 LINE 圖示 → LINE 自動在 Edge 開啟（約 3 秒）
                 </p>
             </div>
 
-            <h2>❓ 常見問題</h2>
+            <h2>❓ 遇到問題？</h2>
             <div class="step">
-                <h3>Q: 點擊圖示沒反應？</h3>
+                <h3>點擊圖示沒反應</h3>
                 <p>
-                    1. 確認已執行 install-pro.bat<br>
-                    2. 確認 Extension ID 正確<br>
-                    3. 重新載入擴充程式<br>
-                    4. 點擊「重新檢測」按鈕
+                    重新載入擴充程式 → 點擊圖示 → 點擊「重新檢測」
                 </p>
             </div>
 
             <div class="step">
-                <h3>Q: 如何解除安裝？</h3>
+                <h3>如何解除安裝</h3>
                 <p>
-                    執行 uninstall-pro.bat，然後在 Chrome 移除擴充程式
+                    PowerShell 執行：<code>Remove-Item "$env:LOCALAPPDATA\LineOpenerPro" -Recurse -Force</code>
                 </p>
             </div>
         </div>
 
         <div class="footer">
-            <p>Open LINE in Edge (Pro) v2.1.0</p>
+            <p>Open LINE in Edge (Pro) v2.2.0</p>
             <p>MIT License | <a href="https://github.com/jwu0330/line-pro" style="color: #00B900;">GitHub</a></p>
         </div>
     </div>
