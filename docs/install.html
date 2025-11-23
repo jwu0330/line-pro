@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一鍵安裝 - Open LINE in Edge (Pro)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #00B900 0%, #009900 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00B900;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #00B900;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .step h3 {
+            display: inline;
+            font-size: 18px;
+        }
+        .step p {
+            margin-top: 10px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .extension-id-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .extension-id-box strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #856404;
+        }
+        .extension-id {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #00B900;
+            font-weight: bold;
+            word-break: break-all;
+        }
+        .command-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 20px 0;
+            position: relative;
+        }
+        .command-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00B900;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: #009900;
+            transform: scale(1.05);
+        }
+        .copy-btn.copied {
+            background: #28a745;
+        }
+        .big-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #00B900;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.2s;
+        }
+        .big-button:hover {
+            background: #009900;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,185,0,0.3);
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00B900;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 一鍵安裝</h1>
+            <p>Open LINE in Edge (Pro)</p>
+        </div>
+
+        <div class="content">
+            <!-- Extension ID 顯示 -->
+            <div class="extension-id-box" id="extensionIdBox" style="display: none;">
+                <strong>📋 你的 Extension ID：</strong>
+                <div class="extension-id" id="extensionIdDisplay">載入中...</div>
+            </div>
+
+            <!-- 步驟 1：開啟 PowerShell -->
+            <div class="step">
+                <span class="step-number">1</span>
+                <h3>開啟 PowerShell</h3>
+                <p>
+                    按 <kbd>Win + X</kbd>，選擇「Windows PowerShell」或「終端機」
+                </p>
+            </div>
+
+            <!-- 步驟 2：複製並執行指令 -->
+            <div class="step">
+                <span class="step-number">2</span>
+                <h3>複製並執行以下指令</h3>
+                <p>在 PowerShell 中貼上並按 Enter</p>
+                
+                <div class="command-box">
+                    <button class="copy-btn" onclick="copyCommand()">📋 複製</button>
+                    <pre id="installCommand">載入中...</pre>
+                </div>
+
+                <div class="warning">
+                    <strong>⚠️ 注意：</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>指令會自動下載並安裝 Native Host</li>
+                        <li>安裝位置：<code>%LOCALAPPDATA%\LineOpenerPro</code></li>
+                        <li>不需要管理員權限</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 步驟 3：重新檢測 -->
+            <div class="step">
+                <span class="step-number">3</span>
+                <h3>回到擴充程式</h3>
+                <p>
+                    安裝完成後，點擊 Chrome 工具列上的 LINE 圖示，然後點擊「🔄 重新檢測」按鈕
+                </p>
+            </div>
+
+            <div class="success">
+                <strong>✅ 完成！</strong><br>
+                之後每次點擊圖示，LINE 就會自動在 Edge 中開啟！
+            </div>
+
+            <button class="big-button" onclick="window.close()">
+                ✓ 我已完成安裝
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 從 URL 參數取得 Extension ID
+        function getExtensionId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || 'YOUR_EXTENSION_ID';
+        }
+
+        // 生成安裝指令
+        function generateInstallCommand(extensionId) {
+            return `# LINE Opener Pro - 一鍵安裝指令
+$extId = "${extensionId}"
+
+# 下載安裝腳本
+$installScript = @"
+# 建立安裝目錄
+\\$installDir = "\\$env:LOCALAPPDATA\\LineOpenerPro\\native-host"
+New-Item -ItemType Directory -Path \\$installDir -Force | Out-Null
+
+# 下載檔案
+\\$baseUrl = "https://raw.githubusercontent.com/jwu0330/line-pro/master/native-host"
+\\$files = @("line_opener_host.bat", "line_opener_host.ps1", "auto_click_line.ps1")
+
+foreach (\\$file in \\$files) {
+    Invoke-WebRequest -Uri "\\$baseUrl/\\$file" -OutFile "\\$installDir\\\\$file"
+}
+
+# 建立 manifest
+\\$hostPath = "\\$installDir\\line_opener_host.bat" -replace '\\\\\\\\', '\\\\\\\\\\\\\\\\'
+\\$manifest = @"
+{
+  "name": "com.line.opener",
+  "description": "LINE Opener Native Host",
+  "path": "\\$hostPath",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://\\$extId/"
+  ]
+}
+"@
+
+Set-Content "\\$installDir\\com.line.opener.json" -Value \\$manifest -Encoding UTF8
+
+# 註冊到 Chrome
+reg add "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\com.line.opener" /ve /t REG_SZ /d "\\$installDir\\com.line.opener.json" /f
+
+Write-Host "安裝完成！" -ForegroundColor Green
+Write-Host "Extension ID: \\$extId" -ForegroundColor Cyan
+"@
+
+# 執行安裝
+Invoke-Expression \\$installScript`;
+        }
+
+        // 複製指令
+        function copyCommand() {
+            const command = document.getElementById('installCommand').textContent;
+            navigator.clipboard.writeText(command).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ 已複製！';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 複製';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // 初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            const extensionId = getExtensionId();
+            
+            // 顯示 Extension ID
+            if (extensionId !== 'YOUR_EXTENSION_ID') {
+                document.getElementById('extensionIdBox').style.display = 'block';
+                document.getElementById('extensionIdDisplay').textContent = extensionId;
+            }
+            
+            // 生成並顯示安裝指令
+            const command = generateInstallCommand(extensionId);
+            document.getElementById('installCommand').textContent = command;
+        });
+    </script>
+</body>
+</html>

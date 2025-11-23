@@ -1,0 +1,9 @@
+{
+  "name": "com.line.opener",
+  "description": "LINE Opener Native Host",
+  "path": "line_opener_host.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://EXTENSION_ID_WILL_BE_REPLACED/"
+  ]
+}

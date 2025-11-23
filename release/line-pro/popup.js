@@ -84,11 +84,11 @@ function showInstallGuide() {
     const extId = getExtensionId();
     document.getElementById('extensionId').textContent = extId;
     
-    // 安裝按鈕 - 開啟一鍵安裝頁面並傳遞 Extension ID
+    // 下載按鈕 - 開啟 GitHub Release 頁面
     document.getElementById('downloadBtn').addEventListener('click', (e) => {
         e.preventDefault();
         chrome.tabs.create({
-            url: `https://jwu0330.github.io/line-pro/install.html?id=${extId}`
+            url: 'https://github.com/jwu0330/line-pro/releases/latest'
         });
     });
     
