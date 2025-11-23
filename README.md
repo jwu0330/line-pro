@@ -1,103 +1,94 @@
-# Open LINE in Edge (Pro)
+# 🚀 Open LINE in Edge (Pro)
 
-一鍵從 Chrome 開啟 Edge 的 LINE，使用 Native Messaging 技術，無確認對話框，完全背景執行。
+一鍵從 Chrome 開啟 Edge 的 LINE，無確認對話框，完全自動化。
 
-## 🚀 快速開始
-
-**[📥 下載最新版本](https://github.com/jwu0330/line-pro/releases/latest/download/line-pro-installer.zip)**
-
-或訪問 **[安裝指南網頁](https://jwu0330.github.io/line-pro/)**
-
-## ✨ 特色
-
-- ✅ **無確認對話框** - 使用 Chrome Native Messaging API
-- ✅ **完全背景執行** - 不會有任何視窗閃現
-- ✅ **自動點擊 LINE** - 使用 Windows UI Automation
-- ✅ **可上架 Chrome Web Store** - 符合官方規範
-- ✅ **無需 Python** - 只使用 Windows 內建工具
+[![Version](https://img.shields.io/badge/version-2.2.0-green.svg)](https://github.com/jwu0330/line-pro/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
-## 📦 安裝步驟
+## ✨ 特色
 
-### 1. 載入 Chrome 擴充程式
+- ⚡ **無確認對話框** - 使用 Chrome Native Messaging API
+- 🎯 **完全自動化** - 自動點擊 LINE 圖示
+- 🔒 **安全可靠** - Chrome 官方 API，開源可審查
+- 🎨 **智能引導** - 首次使用自動引導安裝
+- 💻 **一鍵安裝** - 複製貼上 PowerShell 指令即可
 
-1. 開啟 Chrome 瀏覽器
-2. 前往 `chrome://extensions/`
-3. 右上角開啟「**開發人員模式**」
-4. 點擊「**載入未封裝項目**」
-5. 選擇此資料夾（`line-pro`）
-6. **複製擴充程式 ID**（在擴充程式名稱下方）
+---
 
-### 2. 安裝 Native Host
+## 📥 快速開始
 
-1. 雙擊執行 `install-pro.bat`
-2. 當提示輸入 Extension ID 時，貼上剛才複製的 ID
-3. 等待安裝完成
+### 方法 1：一鍵安裝（推薦）
 
-### 3. 重新載入擴充程式
+1. **載入 Chrome 擴充程式**
+   - 下載此專案：[Download ZIP](https://github.com/jwu0330/line-pro/archive/refs/heads/master.zip)
+   - 解壓縮
+   - 在 Chrome 前往 `chrome://extensions/`
+   - 開啟「開發人員模式」
+   - 點擊「載入未封裝項目」，選擇解壓後的資料夾
 
-1. 回到 `chrome://extensions/`
-2. 找到「Open LINE in Edge (Pro)」
-3. 點擊「🔄 重新載入」按鈕
+2. **點擊擴充圖示**
+   - 點擊 Chrome 工具列上的 LINE 圖示
+   - 會看到「未安裝」提示
 
-### 4. 測試
+3. **點擊「開始安裝」**
+   - 點擊綠色的「🚀 開始安裝」按鈕
+   - 會開啟安裝指南頁面
 
-點擊 Chrome 工具列上的擴充圖示，LINE 應該會自動開啟！
+4. **複製並執行指令**
+   - 點擊「📋 複製」按鈕
+   - 開啟 PowerShell（按 `Win + X`）
+   - 貼上並按 Enter
+
+5. **完成！**
+   - 回到 Chrome，點擊「🔄 重新檢測」
+   - LINE 會自動在 Edge 中開啟！
+
+### 方法 2：手動安裝
+
+查看 [完整安裝指南](https://jwu0330.github.io/line-pro/)
 
 ---
 
 ## 🎯 使用方式
 
-### 日常使用
+### 第一次使用
+```
+點擊圖示 → 看到引導 → 點擊「開始安裝」→ 複製指令 → 執行 → 重新檢測 → 完成
+```
 
-1. 點擊 Chrome 工具列上的 LINE 圖示
-2. Edge 自動開啟
-3. LINE 自動點擊
-4. 完成！
-
-**整個過程約 3-5 秒，完全自動化。**
-
-### 固定到工具列（可選）
-
-1. 點擊 Chrome 右上角的拼圖圖示
-2. 找到「Open LINE in Edge (Pro)」
-3. 點擊📌圖釘圖示固定到工具列
+### 之後使用
+```
+點擊圖示 → LINE 自動開啟（約 3-5 秒）
+```
 
 ---
 
-## 🔧 技術架構
+## 🔧 系統需求
+
+- ✅ Windows 10/11
+- ✅ Chrome 瀏覽器
+- ✅ Microsoft Edge（已安裝 LINE 擴充功能）
+- ✅ PowerShell 5.0+（Windows 內建）
+
+---
+
+## 📖 工作原理
 
 ```
 Chrome Extension
-    ↓ (Native Messaging API)
+    ↓ (檢測 Native Host)
+未安裝 → 顯示安裝引導
+已安裝 → 發送訊息
+    ↓ (Native Messaging)
 Native Host (批次檔 + PowerShell)
     ↓
-PowerShell 腳本
-    ↓
-Windows UI Automation
+PowerShell UI Automation
     ↓
 自動點擊 Edge 中的 LINE 圖示
     ↓
-LINE 開啟
-```
-
-### 檔案說明
-
-```
-line-pro/
-├── manifest.json              # Chrome 擴充程式配置
-├── popup.html                 # 擴充程式 UI
-├── popup.js                   # 擴充程式邏輯
-├── icons/                     # 圖示
-├── native-host/               # Native Host 檔案
-│   ├── line_opener_host.bat   # Native Host 入口
-│   ├── line_opener_host.ps1   # Native Messaging 處理
-│   ├── auto_click_line.ps1    # UI Automation 腳本
-│   └── com.line.opener.json   # Native Host manifest
-├── install-pro.bat            # 安裝程式
-├── uninstall-pro.bat          # 解除安裝
-└── check-install.bat          # 檢查安裝狀態
+LINE 開啟！
 ```
 
 ---
@@ -106,111 +97,156 @@ line-pro/
 
 ### Q: 點擊圖示沒反應？
 
-**A:** 檢查以下項目：
-
-1. **Extension ID 是否正確**
-   ```cmd
-   check-install.bat
-   ```
-   查看 manifest 中的 Extension ID 是否與實際相符
-
-2. **重新安裝**
-   ```cmd
-   uninstall-pro.bat
-   install-pro.bat
-   ```
-
-3. **檢查 LINE 擴充功能**
-   - 確認 Edge 已安裝 LINE 擴充功能
-   - 確認 LINE 圖示在 Edge 工具列可見
+**A:** 請確認：
+1. 已執行安裝指令
+2. Extension ID 正確
+3. 已重新載入擴充程式
+4. 點擊「重新檢測」按鈕
 
 ### Q: 如何更新 Extension ID？
 
-**A:** 開啟 PowerShell 執行：
+**A:** 執行以下 PowerShell 指令：
 
 ```powershell
 $extId = "你的新Extension ID"
-$manifestPath = "$env:LOCALAPPDATA\LineOpenerPro\native-host\com.line.opener.json"
-$hostPath = "$env:LOCALAPPDATA\LineOpenerPro\native-host\line_opener_host.bat"
-$hostPathJson = $hostPath -replace '\\', '\\'
-
+$installDir = "$env:LOCALAPPDATA\LineOpenerPro\native-host"
+$hostPath = "$installDir\line_opener_host.bat" -replace '\\', '\\'
 $manifest = @"
 {
   "name": "com.line.opener",
   "description": "LINE Opener Native Host",
-  "path": "$hostPathJson",
+  "path": "$hostPath",
   "type": "stdio",
   "allowed_origins": [
     "chrome-extension://$extId/"
   ]
 }
 "@
-
-Set-Content $manifestPath -Value $manifest -Encoding UTF8
-Write-Host "已更新 Extension ID: $extId"
+Set-Content "$installDir\com.line.opener.json" -Value $manifest -Encoding UTF8
+Write-Host "已更新 Extension ID: $extId" -ForegroundColor Green
 ```
-
-然後重新載入擴充程式。
 
 ### Q: 如何解除安裝？
 
-**A:** 
+**A:** 執行：
 
-1. 執行 `uninstall-pro.bat`
-2. 在 Chrome 移除擴充程式
+```powershell
+Remove-Item "$env:LOCALAPPDATA\LineOpenerPro" -Recurse -Force
+reg delete "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.line.opener" /f
+```
+
+然後在 Chrome 移除擴充程式。
+
+### Q: 安裝在哪裡？
+
+**A:** 
+- 檔案位置：`%LOCALAPPDATA%\LineOpenerPro\`
+- 註冊表：`HKCU\Software\Google\Chrome\NativeMessagingHosts\com.line.opener`
+- 不需要管理員權限
+- 可以完全移除
 
 ---
 
-## 🆚 與基本版比較
+## 🛠️ 開發者資訊
 
-| 功能 | 基本版 (line) | Pro 版 (line-pro) |
-|------|---------------|-------------------|
+### 專案結構
+
+```
+line-pro/
+├── manifest.json              # Chrome 擴充程式配置
+├── popup.html                 # 擴充程式 UI
+├── popup.js                   # 擴充程式邏輯（智能檢測）
+├── background.js              # 背景服務
+├── icons/                     # 圖示
+├── native-host/               # Native Host 檔案
+│   ├── line_opener_host.bat   # Native Host 入口
+│   ├── line_opener_host.ps1   # Native Messaging 處理
+│   └── auto_click_line.ps1    # UI Automation 腳本
+├── docs/                      # GitHub Pages
+│   ├── index.html            # 安裝指南首頁
+│   └── install.html          # 一鍵安裝頁面
+└── quick-test.ps1            # 快速測試腳本
+```
+
+### 本地測試
+
+```powershell
+# 快速測試
+.\quick-test.ps1
+
+# 完整流程測試
+.\test-complete-flow.ps1
+
+# 驗證安裝
+.\verify-installation.ps1
+```
+
+### 建立發佈版本
+
+```powershell
+.\build-release.bat
+```
+
+---
+
+## 🆚 版本比較
+
+| 功能 | 基本版 | Pro 版 |
+|------|--------|--------|
 | 自動點擊 LINE | ✅ | ✅ |
 | 確認對話框 | ❌ 每次詢問 | ✅ 無需確認 |
 | 背景執行 | ⚠️ 可能閃現 | ✅ 完全隱藏 |
-| 安裝複雜度 | 簡單 | 中等 |
-| 需要 Python | ❌ | ❌ |
+| 智能引導 | ❌ | ✅ |
+| 一鍵安裝 | ❌ | ✅ |
 | 可上架 Web Store | ❌ | ✅ |
 
 ---
 
-## 🔒 安全性
+## 📝 更新日誌
 
-- ✅ 只安裝到使用者目錄（`%LOCALAPPDATA%`）
-- ✅ 不需要管理員權限
-- ✅ 可以完全移除
-- ✅ 使用 Chrome 官方 Native Messaging API
-- ✅ 開源程式碼，可審查
+### v2.2.0 (2025-11-24)
+- ✨ 新增一鍵 PowerShell 安裝
+- ✨ 智能安裝引導系統
+- ✨ 自動檢測 Native Host 狀態
+- 🐛 修正路徑格式問題
+- 📝 完整的測試套件
+
+### v2.1.0 (2025-11-23)
+- ✨ 智能引導系統
+- ✨ 自動顯示 Extension ID
+- ✨ 安裝狀態檢測
+
+### v2.0.0 (2025-11-23)
+- 🎉 初始 Native Messaging 版本
+- ✨ 無確認對話框
+- ✨ 完全背景執行
 
 ---
 
-## 📝 系統需求
+## 🤝 貢獻
 
-- Windows 10/11
-- Chrome 瀏覽器
-- Microsoft Edge（已安裝 LINE 擴充功能）
-- PowerShell 5.0+（Windows 內建）
-
----
-
-## 🐛 問題回報
-
-如果遇到問題，請提供：
-
-1. Windows 版本
-2. Chrome 版本
-3. Edge 版本
-4. 錯誤訊息截圖
-5. `check-install.bat` 的輸出
+歡迎提交 Issue 和 Pull Request！
 
 ---
 
 ## 📄 授權
 
-MIT License
+MIT License - 詳見 [LICENSE](LICENSE)
 
 ---
 
 ## 🙏 致謝
 
 感謝所有測試和回饋的使用者！
+
+---
+
+## 📞 支援
+
+- 🐛 [回報問題](https://github.com/jwu0330/line-pro/issues)
+- 💬 [討論區](https://github.com/jwu0330/line-pro/discussions)
+- 📧 聯絡作者
+
+---
+
+**⭐ 如果這個專案對你有幫助，請給個星星！**
