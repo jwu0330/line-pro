@@ -92,29 +92,14 @@ function showInstallGuide() {
     document.getElementById('extensionId').textContent = extId;
     
     // 安裝按鈕 - 開啟一鍵安裝頁面並傳遞 Extension ID
-    document.getElementById('downloadBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // 本地測試：使用 file:// 協定
-        // 生產環境：使用 GitHub Pages
-        const installUrl = `https://jwu0330.github.io/line-pro/install.html?id=${extId}`;
-        
-        chrome.tabs.create({
-            url: installUrl
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const installUrl = `https://jwu0330.github.io/line-pro/install.html?id=${extId}`;
+            chrome.tabs.create({ url: installUrl });
         });
-    });
-    
-    // 複製 ID 按鈕
-    document.getElementById('copyIdBtn').addEventListener('click', () => {
-        navigator.clipboard.writeText(extId).then(() => {
-            const btn = document.getElementById('copyIdBtn');
-            const originalText = btn.textContent;
-            btn.textContent = '✅ 已複製！';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
-        });
-    });
+    }
     
     // 重新檢測按鈕
     document.getElementById('recheckBtn').addEventListener('click', async () => {
