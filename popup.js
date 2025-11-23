@@ -87,10 +87,8 @@ function showInstallGuide() {
     // 下載按鈕 - 開啟 GitHub Release 頁面
     document.getElementById('downloadBtn').addEventListener('click', (e) => {
         e.preventDefault();
-        // 這裡可以改成你的 GitHub Release 連結
-        // 或者打開本地檔案
         chrome.tabs.create({
-            url: 'https://github.com/你的帳號/line-opener-pro/releases'
+            url: 'https://github.com/jwu0330/line-pro/releases/latest'
         });
     });
     

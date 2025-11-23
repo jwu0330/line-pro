@@ -2,6 +2,12 @@
 
 一鍵從 Chrome 開啟 Edge 的 LINE，使用 Native Messaging 技術，無確認對話框，完全背景執行。
 
+## 🚀 快速開始
+
+**[📥 下載最新版本](https://github.com/jwu0330/line-pro/releases/latest/download/line-pro-installer.zip)**
+
+或訪問 **[安裝指南網頁](https://jwu0330.github.io/line-pro/)**
+
 ## ✨ 特色
 
 - ✅ **無確認對話框** - 使用 Chrome Native Messaging API
