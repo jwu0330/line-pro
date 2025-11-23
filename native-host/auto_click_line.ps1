@@ -327,9 +327,11 @@ if ($success) {
     Write-Host "  SUCCESS!" -ForegroundColor Green
     Write-Host "========================================" -ForegroundColor Green
     Write-Host ""
-    Write-Host "LINE is opening, closing original Edge window..." -ForegroundColor Cyan
+    Write-Host "[DEBUG] LINE 按鈕點擊成功" -ForegroundColor Cyan
+    Write-Host "[DEBUG] Edge Process ID: $($edge.Id)" -ForegroundColor Gray
+    Write-Host "[DEBUG] 開始尋找要關閉的視窗..." -ForegroundColor Gray
     
-    # 立即關閉原本的 Edge 視窗（使用多種方法確保關閉）
+    # 立即關閉原本的 Edge 視窗
     try {
         Add-Type @"
         using System;
@@ -357,8 +359,11 @@ if ($success) {
         }
 "@
         
-        # 找到所有 Edge 視窗（排除 LINE）
+        # 找到所有 Edge 視窗
+        $allWindows = New-Object System.Collections.ArrayList
         $edgeWindows = New-Object System.Collections.ArrayList
+        $lineWindows = New-Object System.Collections.ArrayList
+        
         $callback = {
             param($hwnd, $lParam)
             if ([WindowHelper]::IsWindowVisible($hwnd)) {
@@ -370,9 +375,14 @@ if ($success) {
                     [WindowHelper]::GetWindowText($hwnd, $title, 256) | Out-Null
                     $titleStr = $title.ToString()
                     
-                    # 排除 LINE 視窗
-                    if ($titleStr -notmatch "LINE") {
-                        $edgeWindows.Add(@{Handle=$hwnd; Title=$titleStr}) | Out-Null
+                    if ($titleStr) {
+                        $script:allWindows.Add(@{Handle=$hwnd; Title=$titleStr; PID=$winProcessId}) | Out-Null
+                        
+                        if ($titleStr -match "LINE") {
+                            $script:lineWindows.Add(@{Handle=$hwnd; Title=$titleStr}) | Out-Null
+                        } else {
+                            $script:edgeWindows.Add(@{Handle=$hwnd; Title=$titleStr}) | Out-Null
+                        }
                     }
                 }
             }
@@ -381,24 +391,47 @@ if ($success) {
         
         [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)
         
-        # 使用多種方法強制關閉所有非 LINE 的 Edge 視窗
-        foreach ($window in $edgeWindows) {
-            # 方法 1: 將視窗置於前景並發送 Alt+F4
-            [WindowHelper]::SetForegroundWindow($window.Handle) | Out-Null
-            Start-Sleep -Milliseconds 100
-            [System.Windows.Forms.SendKeys]::SendWait("%{F4}")
-            Start-Sleep -Milliseconds 100
-            
-            # 方法 2: 發送 WM_CLOSE
-            [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
-            
-            # 方法 3: 發送 WM_SYSCOMMAND SC_CLOSE
-            [WindowHelper]::SendMessage($window.Handle, [WindowHelper]::WM_SYSCOMMAND, [IntPtr]::new([int][WindowHelper]::SC_CLOSE), [IntPtr]::Zero) | Out-Null
+        Write-Host "[DEBUG] 找到 $($allWindows.Count) 個 Edge 視窗" -ForegroundColor Gray
+        Write-Host "[DEBUG] 其中 $($lineWindows.Count) 個 LINE 視窗" -ForegroundColor Green
+        Write-Host "[DEBUG] 其中 $($edgeWindows.Count) 個非 LINE 視窗" -ForegroundColor Yellow
+        
+        foreach ($w in $allWindows) {
+            $isLine = if ($w.Title -match "LINE") { "[LINE]" } else { "[Edge]" }
+            Write-Host "  $isLine $($w.Title)" -ForegroundColor Gray
         }
         
-        Write-Host "Original Edge windows closed" -ForegroundColor Green
+        if ($edgeWindows.Count -eq 0) {
+            Write-Host "[WARN] 沒有找到要關閉的視窗！" -ForegroundColor Yellow
+        } else {
+            Write-Host ""
+            Write-Host "[DEBUG] 開始關閉 $($edgeWindows.Count) 個視窗..." -ForegroundColor Cyan
+            
+            foreach ($window in $edgeWindows) {
+                Write-Host "  正在關閉: $($window.Title)" -ForegroundColor Yellow
+                
+                # 方法 1: Alt+F4
+                $result1 = [WindowHelper]::SetForegroundWindow($window.Handle)
+                Write-Host "    SetForegroundWindow: $result1" -ForegroundColor Gray
+                Start-Sleep -Milliseconds 100
+                [System.Windows.Forms.SendKeys]::SendWait("%{F4}")
+                Write-Host "    已發送 Alt+F4" -ForegroundColor Gray
+                Start-Sleep -Milliseconds 100
+                
+                # 方法 2: WM_CLOSE
+                $result2 = [WindowHelper]::PostMessage($window.Handle, [WindowHelper]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero)
+                Write-Host "    PostMessage WM_CLOSE: $result2" -ForegroundColor Gray
+                
+                # 方法 3: WM_SYSCOMMAND SC_CLOSE
+                $result3 = [WindowHelper]::SendMessage($window.Handle, [WindowHelper]::WM_SYSCOMMAND, [IntPtr]::new([int][WindowHelper]::SC_CLOSE), [IntPtr]::Zero)
+                Write-Host "    SendMessage SC_CLOSE: $result3" -ForegroundColor Gray
+            }
+            
+            Write-Host ""
+            Write-Host "[SUCCESS] 已發送所有關閉指令" -ForegroundColor Green
+        }
     } catch {
-        Write-Host "Error: $_" -ForegroundColor Yellow
+        Write-Host "[ERROR] $_" -ForegroundColor Red
+        Write-Host "[ERROR] Stack: $($_.ScriptStackTrace)" -ForegroundColor Red
     }
     
     exit 0
