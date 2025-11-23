@@ -51,3 +51,7 @@ debug_*.png
 
 # Native Host (動態生成)
 native-host/com.line.opener.json
+
+# Build output
+dist/
+*.zip
