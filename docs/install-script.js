@@ -227,7 +227,7 @@ function generateInstallCommand(extensionId) {
     cmd += '# 註冊到 Chrome\n';
     cmd += 'reg add "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\com.line.opener" /ve /t REG_SZ /d "$installDir\\com.line.opener.json" /f | Out-Null\n\n';
     
-    cmd += 'Write-Host "安裝完成！" -ForegroundColor Green\n';
+    cmd += 'Write-Host "安裝完成！(更新版)" -ForegroundColor Green\n';
     cmd += 'Write-Host "請回到 Chrome 點擊擴充圖示，然後點擊『重新檢測』" -ForegroundColor Cyan';
     
     return cmd;
