@@ -98,9 +98,6 @@ function showInstallGuide() {
             e.preventDefault();
             const installUrl = `https://jwu0330.github.io/line-pro/install.html?id=${extId}`;
             chrome.tabs.create({ url: installUrl });
-            
-            // 記住使用者已經看過安裝頁面
-            chrome.storage.local.set({ 'hasSeenInstallPage': true });
         });
     }
     
