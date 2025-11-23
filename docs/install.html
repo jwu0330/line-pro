@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE Opener Pro - 安裝</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #00B900 0%, #009900 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+        .header h1 { font-size: 24px; margin-bottom: 8px; }
+        .content { padding: 24px; }
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+        .section h2 { font-size: 18px; margin-bottom: 12px; color: #00B900; }
+        .command-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+            margin-top: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .command-box pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+        .copy-btn {
+            position: sticky;
+            top: 8px;
+            float: right;
+            background: #00B900;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .copy-btn:hover { background: #009900; }
+        .copy-btn.copied { background: #28a745; }
+        .note { font-size: 13px; color: #666; margin-top: 8px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> LINE Opener Pro</h1>
+            <p>複製指令到 PowerShell 執行即可</p>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2> 安裝指令</h2>
+                <p class="note">複製以下指令，貼到 PowerShell (Win+X) 執行：</p>
+                <div class="command-box">
+                    <button class="copy-btn" onclick="copyInstall()"> 複製</button>
+                    <pre id="installCommand">載入中...</pre>
+                </div>
+            </div>
+            <div class="section">
+                <h2> 解除安裝指令</h2>
+                <p class="note">如需移除，複製以下指令到 PowerShell 執行：</p>
+                <div class="command-box">
+                    <button class="copy-btn" onclick="copyUninstall()"> 複製</button>
+                    <pre id="uninstallCommand">Remove-Item "$env:LOCALAPPDATA\LineOpenerPro" -Recurse -Force
+reg delete "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.line.opener" /f
+Write-Host "已解除安裝" -ForegroundColor Green</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="install-script.js"></script>
+    <script>
+        function getExtensionId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || 'YOUR_EXTENSION_ID';
+        }
+        function copyInstall() {
+            const command = document.getElementById('installCommand').textContent;
+            copyToClipboard(command, event.target);
+        }
+        function copyUninstall() {
+            const command = document.getElementById('uninstallCommand').textContent;
+            copyToClipboard(command, event.target);
+        }
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = ' 已複製';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            const extensionId = getExtensionId();
+            const command = generateInstallCommand(extensionId);
+            document.getElementById('installCommand').textContent = command;
+        });
+    </script>
+</body>
+</html>
