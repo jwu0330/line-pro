@@ -30,10 +30,17 @@ function checkNativeHost() {
     return new Promise((resolve) => {
         console.log('[LINE Extension Pro] Checking Native Host...');
         
+        // 設定超時，避免無限等待
+        const timeout = setTimeout(() => {
+            console.log('[LINE Extension Pro] Native Host check timeout');
+            resolve(false);
+        }, 3000);
+        
         chrome.runtime.sendNativeMessage(
             'com.line.opener',
             { action: 'ping' },
             function(response) {
+                clearTimeout(timeout);
                 if (chrome.runtime.lastError) {
                     console.log('[LINE Extension Pro] Native Host not found:', chrome.runtime.lastError.message);
                     resolve(false);
@@ -110,8 +117,25 @@ function showInstallGuide() {
     });
     
     // 重新檢測按鈕
-    document.getElementById('recheckBtn').addEventListener('click', () => {
-        init();
+    document.getElementById('recheckBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('recheckBtn');
+        const originalText = btn.textContent;
+        
+        // 顯示檢測中
+        btn.textContent = '🔄 檢測中...';
+        btn.disabled = true;
+        
+        // 等待一下讓使用者感受到在檢測
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // 重新初始化
+        await init();
+        
+        // 恢復按鈕（如果還在安裝頁面）
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }, 100);
     });
 }
 
