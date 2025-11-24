@@ -87,16 +87,12 @@ function showError(message) {
 function showInstallGuide() {
     showView('install');
     
-    // 顯示 Extension ID
-    const extId = getExtensionId();
-    document.getElementById('extensionId').textContent = extId;
-    
-    // 安裝按鈕 - 開啟一鍵安裝頁面並傳遞 Extension ID
+    // 安裝按鈕 - 開啟一鍵安裝頁面
     const downloadBtn = document.getElementById('downloadBtn');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const installUrl = `https://jwu0330.github.io/line-pro/install.html?id=${extId}`;
+            const installUrl = 'https://jwu0330.github.io/line-pro/install.html';
             chrome.tabs.create({ url: installUrl });
         });
     }

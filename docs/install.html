@@ -150,7 +150,8 @@
         <p>選擇操作類型，複製指令到 PowerShell 執行</p>
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('install')">📥 安裝指令</button>
-            <button class="tab-btn" onclick="showTab('uninstall')">🗑️ 解除安裝指令</button>
+            <button class="tab-btn" onclick="showTab('uninstall')">🗑️ 解除安裝</button>
+            <button class="tab-btn" onclick="showTab('run')">🚀 開始執行</button>
         </div>
     </div>
     
@@ -175,6 +176,31 @@
 reg delete "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.line.opener" /f
 Write-Host "已解除安裝" -ForegroundColor Green</pre>
             </div>
+        </div>
+        
+        <!-- 開始執行 -->
+        <div id="run" class="tab-content">
+            <h2 class="section-title">🚀 開始執行 LINE</h2>
+            <p class="note">安裝完成後，點擊下方按鈕即可開啟 LINE：</p>
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="openLINE()" style="
+                    padding: 15px 40px;
+                    background: #d4c4a8;
+                    color: #3a2f25;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    box-shadow: 0 4px 12px rgba(212, 196, 168, 0.3);
+                " onmouseover="this.style.background='#c9b89a'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(212, 196, 168, 0.4)'" onmouseout="this.style.background='#d4c4a8'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(212, 196, 168, 0.3)'">
+                    📱 開啟 LINE
+                </button>
+            </div>
+            <p class="note" style="text-align: center; margin-top: 20px; color: #8b7355;">
+                💡 提示：也可以直接點擊 Chrome 擴充功能圖示來開啟 LINE
+            </p>
         </div>
     </div>
     
@@ -211,6 +237,11 @@ Write-Host "已解除安裝" -ForegroundColor Green</pre>
         function copyUninstall() {
             const command = document.getElementById('uninstallCommand').textContent;
             copyToClipboard(command, event.target);
+        }
+        
+        function openLINE() {
+            // 開啟 LINE 網頁版
+            window.open('https://line.me/zh-hant/', '_blank');
         }
         
         function copyToClipboard(text, btn) {
