@@ -82,7 +82,26 @@ function showError(message) {
 function showInstallGuide() {
     showView('install');
     
-    // 安裝按鈕 - 開啟一鍵安裝頁面
+    // Edge LINE 安裝按鈕
+    const edgeLineBtn = document.getElementById('edgeLineBtn');
+    if (edgeLineBtn) {
+        edgeLineBtn.addEventListener('click', () => {
+            const edgeLineUrl = 'https://chromewebstore.google.com/detail/line/ophjlpahpchlmihnnnihgmmeilfjmjjc';
+            // 複製網址到剪貼簿
+            navigator.clipboard.writeText(edgeLineUrl).then(() => {
+                // 顯示提示
+                const originalText = edgeLineBtn.textContent;
+                edgeLineBtn.textContent = '✅ 已複製！請在 Edge 瀏覽器開啟';
+                setTimeout(() => {
+                    edgeLineBtn.textContent = originalText;
+                }, 3000);
+            });
+            // 同時開啟新分頁
+            chrome.tabs.create({ url: edgeLineUrl });
+        });
+    }
+    
+    // Native Host 安裝按鈕 - 開啟一鍵安裝頁面
     const downloadBtn = document.getElementById('downloadBtn');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', (e) => {
