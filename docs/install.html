@@ -181,26 +181,33 @@ Write-Host "已解除安裝" -ForegroundColor Green</pre>
         <!-- 開始執行 -->
         <div id="run" class="tab-content">
             <h2 class="section-title">🚀 開始執行 LINE</h2>
-            <p class="note">安裝完成後，點擊下方按鈕即可開啟 LINE：</p>
-            <div style="text-align: center; margin-top: 30px;">
-                <button onclick="openLINE()" style="
-                    padding: 15px 40px;
-                    background: #d4c4a8;
-                    color: #3a2f25;
-                    border: none;
-                    border-radius: 8px;
-                    font-size: 18px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    box-shadow: 0 4px 12px rgba(212, 196, 168, 0.3);
-                " onmouseover="this.style.background='#c9b89a'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(212, 196, 168, 0.4)'" onmouseout="this.style.background='#d4c4a8'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(212, 196, 168, 0.3)'">
-                    📱 開啟 LINE
-                </button>
+            <p class="note">安裝完成後，請使用以下方式開啟 LINE：</p>
+            
+            <div style="background: #f5f0e8; padding: 25px; border-radius: 8px; margin-top: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📱</div>
+                    <div style="font-size: 18px; font-weight: 600; color: #5a4a3a; margin-bottom: 10px;">
+                        點擊 Chrome 擴充功能圖示
+                    </div>
+                    <div style="font-size: 14px; color: #8b7355;">
+                        在瀏覽器右上角找到 LINE Opener Pro 圖示並點擊
+                    </div>
+                </div>
+                
+                <div style="border-top: 1px solid #e8dcc8; padding-top: 20px; margin-top: 20px;">
+                    <div style="font-size: 14px; color: #6b5a47; line-height: 1.8;">
+                        <strong>💡 使用說明：</strong><br>
+                        1️⃣ 確認已完成安裝（執行上方的安裝指令）<br>
+                        2️⃣ 點擊瀏覽器右上角的擴充功能圖示<br>
+                        3️⃣ 系統會自動開啟 Edge 並啟動 LINE<br>
+                        <br>
+                        <strong style="color: #c62828;">⚠️ 如果執行失敗：</strong><br>
+                        • 請確認已正確執行安裝指令<br>
+                        • 到 <code style="background: #2a2520; color: #f5f0e8; padding: 2px 6px; border-radius: 3px;">chrome://extensions/</code> 重新載入擴充程式<br>
+                        • 重新點擊擴充功能圖示
+                    </div>
+                </div>
             </div>
-            <p class="note" style="text-align: center; margin-top: 20px; color: #8b7355;">
-                💡 提示：也可以直接點擊 Chrome 擴充功能圖示來開啟 LINE
-            </p>
         </div>
     </div>
     
@@ -237,11 +244,6 @@ Write-Host "已解除安裝" -ForegroundColor Green</pre>
         function copyUninstall() {
             const command = document.getElementById('uninstallCommand').textContent;
             copyToClipboard(command, event.target);
-        }
-        
-        function openLINE() {
-            // 開啟 LINE 網頁版
-            window.open('https://line.me/zh-hant/', '_blank');
         }
         
         function copyToClipboard(text, btn) {
