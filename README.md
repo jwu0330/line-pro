@@ -100,8 +100,10 @@ line-pro/
 - 🧹 移除 background.js（無實際功能）
 - 🔧 修復 popup.js 雙重啟動問題
 - ⚡ 簡化 Edge 啟動邏輯
-- 📱 精簡 popup 介面，移除 Extension ID 顯示
+- 📱 精簡 popup 介面，移除 Extension ID 顯示和重新檢測按鈕
 - 💡 提供清晰的使用說明和錯誤處理指引
+- 🔗 新增 Edge LINE 安裝引導（複製網址方式）
+- 🧹 清理未使用的 CSS 樣式
 
 ### v2.3.0 (2025-11-23)
 - 🎨 簡化安裝頁面，只保留安裝和解除安裝指令

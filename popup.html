@@ -72,27 +72,6 @@
         .button.secondary:hover {
             background: #ebe4d8;
         }
-        .code-box {
-            background: #f5f0e8;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            word-break: break-all;
-            margin: 10px 0;
-            border: 1px solid #e8dcc8;
-            color: #5a4a3a;
-        }
-        .steps {
-            text-align: left;
-            font-size: 12px;
-            line-height: 1.8;
-            color: #6b5a47;
-        }
-        .steps ol {
-            margin: 5px 0;
-            padding-left: 20px;
-        }
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -127,23 +106,18 @@
         <!-- 未安裝 - 引導安裝 -->
         <div id="installView" class="hidden">
             <div class="status error">
-                <div class="title">❌ Native Host 未安裝</div>
-                <div class="message">需要安裝 Native Host 才能使用</div>
+                <div class="title">❌ 需要完成安裝</div>
             </div>
             
-            <div class="steps">
-                <strong>📋 安裝步驟：</strong>
-                <ol>
-                    <li><strong>首次使用？</strong>請先點擊「安裝 Edge LINE」</li>
-                    <li>點擊「開始安裝 Native Host」</li>
-                    <li>複製 PowerShell 指令並執行</li>
-                    <li>回來點擊「重新檢測」</li>
-                </ol>
+            <div class="message" style="text-align: left; font-size: 13px; line-height: 1.8; margin-bottom: 15px;">
+                <strong>📋 安裝步驟：</strong><br>
+                1️⃣ 首次使用？先安裝 Edge LINE<br>
+                2️⃣ 安裝 Native Host（複製指令執行）<br>
+                3️⃣ 重新開啟此擴充功能即可使用
             </div>
 
-            <button id="edgeLineBtn" class="button" style="background: #00B900;">📱 安裝 Edge LINE 擴充功能</button>
-            <a href="#" id="downloadBtn" class="button">🚀 開始安裝 Native Host</a>
-            <button id="recheckBtn" class="button secondary">🔄 重新檢測</button>
+            <button id="edgeLineBtn" class="button" style="background: #00B900;">📱 安裝 Edge LINE</button>
+            <a href="#" id="downloadBtn" class="button">🚀 安裝 Native Host</a>
         </div>
 
         <!-- 已安裝 - 執行中 -->
