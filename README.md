@@ -2,7 +2,7 @@
 
 一鍵從 Chrome 開啟 Edge 的 LINE，無確認對話框，完全自動化。
 
-[![Version](https://img.shields.io/badge/version-2.3.0-green.svg)](https://github.com/jwu0330/line-pro/releases)
+[![Version](https://img.shields.io/badge/version-2.4.0-green.svg)](https://github.com/jwu0330/line-pro/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
@@ -93,7 +93,17 @@ line-pro/
 
 ## 📝 更新日誌
 
-### v2.3.0 (2025-11-24)
+### v2.4.0 (2025-11-24)
+- 🎨 全新米白色主題設計
+- ✨ 分頁式安裝介面（安裝/解除安裝/開始執行）
+- 🧹 移除 native-host 資料夾（改由 install-script.js 動態生成）
+- 🧹 移除 background.js（無實際功能）
+- 🔧 修復 popup.js 雙重啟動問題
+- ⚡ 簡化 Edge 啟動邏輯
+- 📱 精簡 popup 介面，移除 Extension ID 顯示
+- 💡 提供清晰的使用說明和錯誤處理指引
+
+### v2.3.0 (2025-11-23)
 - 🎨 簡化安裝頁面，只保留安裝和解除安裝指令
 - 🧹 清理不必要的測試腳本和文件
 - 📦 準備發佈到 Chrome Web Store

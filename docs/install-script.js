@@ -28,7 +28,7 @@ function generateInstallCommand(extensionId) {
     cmd += '$messageJson = [System.Text.Encoding]::UTF8.GetString($messageBytes)\n';
     cmd += '$message = $messageJson | ConvertFrom-Json\n';
     cmd += 'if ($message.action -eq \'ping\') {\n';
-    cmd += '    $response = @{ success = $true; message = "Native Host is running"; version = "2.3.0" } | ConvertTo-Json -Compress\n';
+    cmd += '    $response = @{ success = $true; message = "Native Host is running"; version = "2.4.0" } | ConvertTo-Json -Compress\n';
     cmd += '} elseif ($message.action -eq \'openLINE\') {\n';
     cmd += '    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path\n';
     cmd += '    $autoClickScript = Join-Path $scriptDir "auto_click_line.ps1"\n';

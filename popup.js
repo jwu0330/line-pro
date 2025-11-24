@@ -20,11 +20,6 @@ function showView(viewName) {
     }
 }
 
-// 取得 Extension ID
-function getExtensionId() {
-    return chrome.runtime.id;
-}
-
 // 檢測 Native Host 是否已安裝
 function checkNativeHost() {
     return new Promise((resolve) => {
