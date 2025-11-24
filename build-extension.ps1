@@ -11,7 +11,7 @@ if (Test-Path $zipFile) { Remove-Item $zipFile -Force }
 
 New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
 
-$files = @("manifest.json", "background.js", "popup.html", "popup.js", "icons")
+$files = @("manifest.json", "popup.html", "popup.js", "icons")
 
 foreach ($item in $files) {
     if (Test-Path $item) {

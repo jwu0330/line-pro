@@ -1,30 +1,3 @@
-# Python
-*.pyc
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# PyInstaller
-*.manifest
-*.spec
-
 # IDE
 .vscode/
 .idea/
@@ -49,9 +22,6 @@ desktop.ini
 test_*.html
 debug_*.png
 
-# Native Host (動態生成)
-native-host/com.line.opener.json
-
-# Build output
+# Build output (由 build-extension.ps1 生成)
 dist/
 *.zip

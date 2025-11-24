@@ -52,19 +52,13 @@ function generateInstallCommand(extensionId) {
     cmd += 'Add-Type -AssemblyName UIAutomationClient\n';
     cmd += 'Add-Type -AssemblyName UIAutomationTypes\n';
     cmd += 'Add-Type -AssemblyName System.Windows.Forms\n';
+    cmd += '$edgePath = "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe"\n';
+    cmd += 'if (-not (Test-Path $edgePath)) { $edgePath = "${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe" }\n';
     cmd += '$edge = Get-Process msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1\n';
-    cmd += 'if (-not $edge) {\n';
-    cmd += '    $edgePath = "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe"\n';
-    cmd += '    if (-not (Test-Path $edgePath)) { $edgePath = "${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe" }\n';
-    cmd += '    Start-Process $edgePath "edge://newtab/"\n';
-    cmd += '    Start-Sleep -Seconds 3\n';
-    cmd += '    $edge = Get-Process msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1\n';
-    cmd += '} else {\n';
-    cmd += '    $edgePath = "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe"\n';
-    cmd += '    if (-not (Test-Path $edgePath)) { $edgePath = "${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe" }\n';
-    cmd += '    Start-Process $edgePath "edge://newtab/"\n';
-    cmd += '    Start-Sleep -Seconds 2\n';
-    cmd += '}\n';
+    cmd += '$sleepTime = if ($edge) { 2 } else { 3 }\n';
+    cmd += 'Start-Process $edgePath "edge://newtab/"\n';
+    cmd += 'Start-Sleep -Seconds $sleepTime\n';
+    cmd += 'if (-not $edge) { $edge = Get-Process msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1 }\n';
     cmd += 'if (-not $edge) { exit 1 }\n';
     cmd += 'Add-Type @"\n';
     cmd += 'using System;\n';
@@ -181,7 +175,7 @@ function generateInstallCommand(extensionId) {
     cmd += '# 註冊到 Chrome\n';
     cmd += 'reg add "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\com.line.opener" /ve /t REG_SZ /d "$installDir\\com.line.opener.json" /f | Out-Null\n\n';
     
-    cmd += 'Write-Host "安裝完成！(更新版)" -ForegroundColor Green\n';
+    cmd += 'Write-Host "安裝完成！(v2 - 優化版)" -ForegroundColor Green\n';
     cmd += 'Write-Host "請回到 Chrome 點擊擴充圖示，然後點擊『重新檢測』" -ForegroundColor Cyan';
     
     return cmd;

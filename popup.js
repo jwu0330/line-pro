@@ -152,12 +152,9 @@ document.getElementById('retryBtn')?.addEventListener('click', () => {
     init();
 });
 
-// 啟動
-document.addEventListener('DOMContentLoaded', () => {
+// 啟動（避免雙重初始化）
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
     init();
-});
-
-// 備用啟動
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(init, 10);
 }

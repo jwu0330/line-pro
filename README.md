@@ -80,15 +80,14 @@ line-pro/
 ├── manifest.json              # Chrome 擴充程式配置
 ├── popup.html                 # 擴充程式 UI
 ├── popup.js                   # 擴充程式邏輯
-├── background.js              # 背景服務
 ├── icons/                     # 圖示
-├── native-host/               # Native Host 檔案
-│   ├── line_opener_host.bat   # Native Host 入口
-│   ├── line_opener_host.ps1   # Native Messaging 處理
-│   └── auto_click_line.ps1    # UI Automation 腳本
-└── docs/
-    └── install.html           # 安裝頁面
+├── docs/
+│   ├── install.html           # 安裝頁面
+│   └── install-script.js      # 一鍵安裝腳本生成器
+└── build-extension.ps1        # 打包腳本（用於發佈到 Chrome Web Store）
 ```
+
+**註：** Native Host 檔案由 `install-script.js` 動態生成到用戶的 `%LOCALAPPDATA%\LineOpenerPro\` 目錄。
 
 ---
 
