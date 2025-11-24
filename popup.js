@@ -82,22 +82,23 @@ function showError(message) {
 function showInstallGuide() {
     showView('install');
     
-    // Edge LINE 安裝按鈕
+    // Edge LINE 安裝按鈕 - 直接複製網址
     const edgeLineBtn = document.getElementById('edgeLineBtn');
     if (edgeLineBtn) {
         edgeLineBtn.addEventListener('click', () => {
             const edgeLineUrl = 'https://chromewebstore.google.com/detail/line/ophjlpahpchlmihnnnihgmmeilfjmjjc';
+            
             // 複製網址到剪貼簿
             navigator.clipboard.writeText(edgeLineUrl).then(() => {
-                // 顯示提示
                 const originalText = edgeLineBtn.textContent;
-                edgeLineBtn.textContent = '✅ 已複製！請在 Edge 瀏覽器開啟';
+                edgeLineBtn.textContent = '✅ 已複製！請在 Edge 開啟';
                 setTimeout(() => {
                     edgeLineBtn.textContent = originalText;
-                }, 3000);
+                }, 2500);
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('請手動複製此網址：\n' + edgeLineUrl);
             });
-            // 同時開啟新分頁
-            chrome.tabs.create({ url: edgeLineUrl });
         });
     }
     
@@ -110,28 +111,6 @@ function showInstallGuide() {
             chrome.tabs.create({ url: installUrl });
         });
     }
-    
-    // 重新檢測按鈕
-    document.getElementById('recheckBtn').addEventListener('click', async () => {
-        const btn = document.getElementById('recheckBtn');
-        const originalText = btn.textContent;
-        
-        // 顯示檢測中
-        btn.textContent = '🔄 檢測中...';
-        btn.disabled = true;
-        
-        // 等待一下讓使用者感受到在檢測
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // 重新初始化
-        await init();
-        
-        // 恢復按鈕（如果還在安裝頁面）
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.disabled = false;
-        }, 100);
-    });
 }
 
 // 初始化
