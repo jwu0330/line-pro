@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE Opener Pro - 安裝</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fdfcfa;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .header {
+            background: #fdfcfa;
+            color: #5a4a3a;
+            padding: 40px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e8dcc8;
+        }
+        .header h1 { 
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #5a4a3a;
+        }
+        .header p { 
+            font-size: 15px;
+            color: #8b7355;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 0 20px;
+        }
+        .tab-btn {
+            padding: 12px 30px;
+            background: #f5f0e8;
+            color: #5a4a3a;
+            border: 2px solid #e8dcc8;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover {
+            background: #ebe4d8;
+            border-color: #d4c4a8;
+        }
+        .tab-btn.active {
+            background: #d4c4a8;
+            color: #3a2f25;
+            border-color: #c9b89a;
+        }
+        .content {
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            font-size: 22px;
+            color: #8b7355;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .note {
+            font-size: 15px;
+            color: #6b5a47;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .command-box {
+            background: #2a2520;
+            color: #f5f0e8;
+            padding: 25px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(42, 37, 32, 0.15);
+        }
+        .command-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #c9b89a;
+            color: #3a2f25;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .copy-btn:hover {
+            background: #b8a788;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+        }
+        .copy-btn.copied {
+            background: #a89678;
+        }
+        @media (max-width: 768px) {
+            .header { padding: 30px 15px 15px; }
+            .header h1 { font-size: 26px; }
+            .tabs { flex-direction: column; padding: 0 15px; }
+            .tab-btn { width: 100%; }
+            .content { padding: 30px 15px; }
+            .command-box { 
+                font-size: 11px;
+                padding: 20px;
+                padding-top: 55px;
+            }
+            .copy-btn {
+                top: 15px;
+                right: 15px;
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📱 LINE Opener Pro</h1>
+        <p>選擇操作類型，複製指令到 PowerShell 執行</p>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('install')">📥 安裝指令</button>
+            <button class="tab-btn" onclick="showTab('uninstall')">🗑️ 解除安裝指令</button>
+        </div>
+    </div>
+    
+    <div class="content">
+        <!-- 安裝指令 -->
+        <div id="install" class="tab-content active">
+            <h2 class="section-title">📥 安裝指令</h2>
+            <p class="note">複製以下指令，貼到 PowerShell (Win+X) 執行：</p>
+            <div class="command-box">
+                <button class="copy-btn" onclick="copyInstall()">📋 複製</button>
+                <pre id="installCommand">載入中...</pre>
+            </div>
+        </div>
+        
+        <!-- 解除安裝指令 -->
+        <div id="uninstall" class="tab-content">
+            <h2 class="section-title">🗑️ 解除安裝指令</h2>
+            <p class="note">如需移除，複製以下指令到 PowerShell 執行：</p>
+            <div class="command-box">
+                <button class="copy-btn" onclick="copyUninstall()">📋 複製</button>
+                <pre id="uninstallCommand">Remove-Item "$env:LOCALAPPDATA\LineOpenerPro" -Recurse -Force
+reg delete "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.line.opener" /f
+Write-Host "已解除安裝" -ForegroundColor Green</pre>
+            </div>
+        </div>
+    </div>
+    
+    <script src="install-script.js"></script>
+    <script>
+        function showTab(tabName) {
+            // 隱藏所有內容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有按鈕的 active 狀態
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 顯示選中的內容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 設置對應按鈕為 active
+            event.target.classList.add('active');
+        }
+        
+        function getExtensionId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || 'phmpiijeidboekpokjaannamejbkjock';
+        }
+        
+        function copyInstall() {
+            const command = document.getElementById('installCommand').textContent;
+            copyToClipboard(command, event.target);
+        }
+        
+        function copyUninstall() {
+            const command = document.getElementById('uninstallCommand').textContent;
+            copyToClipboard(command, event.target);
+        }
+        
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '✅ 已複製';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const extensionId = getExtensionId();
+            const command = generateInstallCommand(extensionId);
+            document.getElementById('installCommand').textContent = command;
+        });
+    </script>
+</body>
+</html>
